@@ -4,7 +4,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'https://dainnblog-blog.onrender.com',
+  apiUrl: 'https://dainnblog-backend.onrender.com',
 };
 
 /*
