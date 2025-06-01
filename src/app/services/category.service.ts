@@ -5,26 +5,20 @@ import { environment } from 'src/environments/environment';
 import { ErrorService } from './error.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
-
-  constructor(
-    private _http: HttpClient,
-    private _errorService: ErrorService
-  ) { }
+  constructor(private _http: HttpClient, private _errorService: ErrorService) {}
 
   getCategoryList() {
-    return this._http.get(`${environment.apiUrl}/category`)
-    .pipe(
-      catchError(err => this._errorService.handleError(err))
-    );
+    return this._http
+      .get(`${environment.apiUrl}/category`)
+      .pipe(catchError((err) => this._errorService.handleError(err)));
   }
 
   getCategorizedBlogCount(bloggerId = 'all') {
-    return this._http.get(`${environment.apiUrl}/category/categorizedBlogs/${bloggerId}`)
-    .pipe(
-      catchError(err => this._errorService.handleError(err))
-    )
+    return this._http
+      .get(`${environment.apiUrl}/category/categorizedBlogs/${bloggerId}`)
+      .pipe(catchError((err) => this._errorService.handleError(err)));
   }
 }

@@ -8,7 +8,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   page: Observable<string>;
@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
     private _utils: UtilsService,
     private _authService: AuthService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.page = this._utils.page;
@@ -29,5 +29,4 @@ export class NavbarComponent implements OnInit {
     this._authService.logout();
     this._router.navigate(['/login']);
   }
-
 }

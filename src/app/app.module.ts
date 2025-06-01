@@ -17,6 +17,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { SignupComponent } from './signup/signup.component';
 import { WriteBlogComponent } from './write-blog/write-blog.component';
+import { TimeAgoPipe } from './pipes/time-ago.pipe';
 
 @NgModule({
   declarations: [
@@ -32,20 +33,17 @@ import { WriteBlogComponent } from './write-blog/write-blog.component';
     ReverseArrayPipe,
     ProfileEditComponent,
     ContactComponent,
-    CategoryComponentComponent
+    CategoryComponentComponent,
+    TimeAgoPipe,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
   providers: [
-    { provide: HTTP_INTERCEPTORS, 
-      useClass: TokenInterceptorService, 
-      multi: true 
-    }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

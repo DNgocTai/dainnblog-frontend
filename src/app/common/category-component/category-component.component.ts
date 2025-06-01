@@ -6,10 +6,9 @@ import { CategoryService } from 'src/app/services/category.service';
 @Component({
   selector: 'app-category-component',
   templateUrl: './category-component.component.html',
-  styleUrls: ['./category-component.component.scss']
+  styleUrls: ['./category-component.component.scss'],
 })
 export class CategoryComponentComponent implements OnInit {
-
   @Input() categoryId: string;
   @Input() bloggerName: string;
   @Input() bloggerId: string;
@@ -21,34 +20,31 @@ export class CategoryComponentComponent implements OnInit {
     loading: false,
     items: [],
     totalBlogs: 0,
-    currentCategoryId: 'all'
-  }
-  
+    currentCategoryId: 'all',
+  };
 
   constructor(
     private _categoryService: CategoryService,
     private _route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-
-    if( this.bloggerName ){
-      this.sectionTitle = this.bloggerName + "'s";
+    if (this.bloggerName) {
+      this.sectionTitle = 'của ' + this.bloggerName;
     } else {
-      this.sectionTitle = 'Blog'
+      this.sectionTitle = 'bài viết';
     }
 
-    if( !this.bloggerId ) {
+    if (!this.bloggerId) {
       this.bloggerId = 'all';
     }
 
-    if( !this.categoryId ) {
+    if (!this.categoryId) {
       this.categoryId = 'all';
     }
 
     this._route.params.subscribe((params) => {
-
-      if( !params.categoryId ) {
+      if (!params.categoryId) {
         this.categories.currentCategoryId = 'all';
       } else {
         this.categories.currentCategoryId = params.categoryId;
@@ -62,23 +58,22 @@ export class CategoryComponentComponent implements OnInit {
     this.categories.loading = true;
     this.categories.error = null;
 
-    this.categories.sub = this._categoryService.getCategorizedBlogCount(this.bloggerId)
-    .subscribe((res:any) => {
-
-      this.categories.items = res;
-      this.categories.items.forEach(c => {
-        this.categories.totalBlogs += c.count;
-      });
-      this.categories.loading = false;
-      this.categories.sub.unsubscribe();
-
-    }, err => {
-      
-      this.categories.error = err;
-      this.categories.loading = false;
-      this.categories.sub.unsubscribe();
-
-    })
+    this.categories.sub = this._categoryService
+      .getCategorizedBlogCount(this.bloggerId)
+      .subscribe(
+        (res: any) => {
+          this.categories.items = res;
+          this.categories.items.forEach((c) => {
+            this.categories.totalBlogs += c.count;
+          });
+          this.categories.loading = false;
+          this.categories.sub.unsubscribe();
+        },
+        (err) => {
+          this.categories.error = err;
+          this.categories.loading = false;
+          this.categories.sub.unsubscribe();
+        }
+      );
   }
-
 }

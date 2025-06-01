@@ -10,28 +10,28 @@ import { UtilsService } from '../services/utils.service';
 @Component({
   selector: 'app-write-blog',
   templateUrl: './write-blog.component.html',
-  styleUrls: ['./write-blog.component.scss']
+  styleUrls: ['./write-blog.component.scss'],
 })
 export class WriteBlogComponent implements OnInit {
-
   apiUrl;
   categoryList: CategoryList = {
     sub: null,
     error: null,
     loading: false,
-    items: []
+    items: [],
   };
-  
+
   blog: WriteBlog = {
     sub: null,
     error: null,
     loading: false,
     data: {
-        title: null,
-        category: null,
-        body: null,
-        img: ''
-    }
+      title: null,
+      category: null,
+      body: null,
+      img: '',
+      posted: '',
+    },
   };
 
   image;
@@ -42,7 +42,7 @@ export class WriteBlogComponent implements OnInit {
     private _blogService: BlogService,
     private _router: Router,
     private _utils: UtilsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -57,59 +57,54 @@ export class WriteBlogComponent implements OnInit {
     formData.append('title', this.blog.data.title);
     formData.append('category', this.blog.data.category);
     formData.append('body', this.blog.data.body);
-    if( this.image ) {
+    if (this.image) {
       formData.append('img', this.image);
     }
-    
-    this.blog.sub = this._blogService.writeBlog(formData)
-    .subscribe((res:any) => {
+    formData.append('posted', Date());
 
-      this._router.navigate(['/blog', res._id])
-      this.blog.loading = false;
-      this.blog.sub.unsubscribe();
-      
-    }, err => {
-      
-      this.blog.error = err;
-      this.blog.loading = false;
-      this.blog.sub.unsubscribe();
-
-    })
+    this.blog.sub = this._blogService.writeBlog(formData).subscribe(
+      (res: any) => {
+        this._router.navigate(['/blog', res._id]);
+        this.blog.loading = false;
+        this.blog.sub.unsubscribe();
+      },
+      (err) => {
+        this.blog.error = err;
+        this.blog.loading = false;
+        this.blog.sub.unsubscribe();
+      }
+    );
   }
 
   getCategories() {
     this.categoryList.loading = true;
     this.categoryList.error = null;
-    
-    this.categoryList.sub = this._categorySerice.getCategoryList()
-    .subscribe((res: any) => {
-      
-      this.categoryList.items = res;
-      this.categoryList.loading = false;
-      this.categoryList.sub.unsubscribe();
 
-    }, err => {
-
-      this.categoryList.error = err;
-      this.categoryList.loading = false;
-      this.categoryList.sub.unsubscribe();
-
-    })
+    this.categoryList.sub = this._categorySerice.getCategoryList().subscribe(
+      (res: any) => {
+        this.categoryList.items = res;
+        this.categoryList.loading = false;
+        this.categoryList.sub.unsubscribe();
+      },
+      (err) => {
+        this.categoryList.error = err;
+        this.categoryList.loading = false;
+        this.categoryList.sub.unsubscribe();
+      }
+    );
   }
 
   fileChangeEvent(e) {
-    if( e.target.files.length > 0 ) {
+    if (e.target.files.length > 0) {
       this.image = e.target.files[0];
-      
+
       const file = (e.target as HTMLInputElement).files[0];
 
       const reader = new FileReader();
       reader.onload = () => {
         this.blog.data.img = reader.result as string;
-      }
-      reader.readAsDataURL(file)
-
+      };
+      reader.readAsDataURL(file);
     }
   }
-
 }
